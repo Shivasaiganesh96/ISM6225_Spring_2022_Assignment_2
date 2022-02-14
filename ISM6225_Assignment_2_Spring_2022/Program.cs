@@ -1,4 +1,4 @@
-﻿/* 
+﻿/*
  
 YOU ARE NOT ALLOWED TO MODIFY ANY FUNCTION DEFINATION's PROVIDED.
 WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
@@ -103,16 +103,16 @@ namespace ISM6225_Assignment_2_Spring_2022
 
             //Question 10:
             Console.WriteLine("Question 10");
-            string word1  = "horse";
+            string word1 = "horse";
             string word2 = "ros";
-            int minLen = MinDistance( word1,  word2);
+            int minLen = MinDistance(word1, word2);
             Console.WriteLine("Minimum number of operations required are {0}", minLen);
             Console.WriteLine();
         }
-    
+
 
         /*
-        
+       
         Question 1:
         Given a sorted array of distinct integers and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
         Note: The algorithm should have run time complexity of O (log n).
@@ -133,7 +133,25 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //Write your Code here.
-                return -1;
+                int n = nums.Length - 1; 
+                int p = 0;                
+                while (p <= n)
+                {
+                    int mid = p + (n - p) / 2; //calculating mid position
+                    if (nums[mid] == target)
+                    {
+                        return mid;
+                    }
+                    if (nums[mid] < target)
+                    {
+                        p = mid + 1;
+                    }
+                    else
+                    {
+                        n = mid - 1;
+                    }
+                }
+                return p;
             }
             catch (Exception)
             {
@@ -151,7 +169,7 @@ namespace ISM6225_Assignment_2_Spring_2022
         Example 1:
         Input: paragraph = "Bob hit a ball, the hit BALL flew far after it was hit.", banned = ["hit"]
         Output: "ball"
-        Explanation: "hit" occurs 3 times, but it is a banned word. "ball" occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph. 
+        Explanation: "hit" occurs 3 times, but it is a banned word. "ball" occurs twice (and no other word does), so it is the most frequent non-banned word in the paragraph.
         Note that words in the paragraph are not case sensitive, that punctuation is ignored (even if adjacent to words, such as "ball,"), and that "hit" isn't the answer even though it occurs more because it is banned.
 
         Example 2:
@@ -163,10 +181,48 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                
                 //write your code here.
+                string str_1 = paragraph.ToLower();
+                string str_2 = " ";
+                string banned_words = string.Empty;
+                int max_value = 0;
+                string max_word = string.Empty;
+                foreach (char c in str_1)
+                {
+                    if (char.IsPunctuation(c)==false) //Remove the punctuation from the input string.
+                    {
+                        str_2 = str_2 + c;
+                    }
+                }
+                string[] strng = str_2.Split(" ");
 
-                return "";
+                
+                Dictionary<string, int> dict = new Dictionary<string, int>(); //Dictionary to store the strings and their respective counts.
+                foreach (string st in strng)
+                {
+                    if (dict.ContainsKey(st))
+                    {
+                        dict[st]=dict[st]+1;
+                    }
+                    else
+                    {
+                        dict.Add(st, 1); //Initializing dictionary
+                    }
+                }
+                foreach(string word in banned)
+                {
+                    banned_words = string.Concat(banned_words,word);
+                }
+                foreach (string sr in dict.Keys)
+                {
+                    if (dict[sr] > max_value && banned_words.Contains(sr) == false) //Getting maximum count string not present in second input string
+                    {
+                        max_value = dict[sr];
+                        max_word = sr;
+                    }
+                }
+                return max_word;
+
             }
             catch (Exception)
             {
@@ -199,25 +255,38 @@ namespace ISM6225_Assignment_2_Spring_2022
         public static int FindLucky(int[] arr)
         {
             try
-            {
-                //write your code here.
-                return 0;
+            {   //write your code here.
+                int maximum = -1;
+                //Array to store counts of input array
+                int[] array_1 = new int[500];
+                foreach (int x in arr)
+                {
+                    //storing counts of each number
+                    array_1[x + 1] = array_1[x + 1] + 1; 
+                }
+                foreach (int x in array_1)
+                {
+                    if (x > maximum)
+                    { //Calculating max_value
+                        maximum = x;  
+                    }
+                }
+                return maximum;
             }
             catch (Exception)
             {
-
                 throw;
             }
 
         }
 
         /*
-        
+       
         Question 4:
         You are playing the Bulls and Cows game with your friend.
         You write down a secret number and ask your friend to guess what the number is. When your friend makes a guess, you provide a hint with the following info:
-        •	The number of "bulls", which are digits in the guess that are in the correct position.
-        •	The number of "cows", which are digits in the guess that are in your secret number but are located in the wrong position. Specifically, the non-bull digits in the guess that could be rearranged such that they become bulls.
+        • The number of "bulls", which are digits in the guess that are in the correct position.
+        • The number of "cows", which are digits in the guess that are in your secret number but are located in the wrong position. Specifically, the non-bull digits in the guess that could be rearranged such that they become bulls.
         Given the secret number secret and your friend's guess guess, return the hint for your friend's guess.
         The hint should be formatted as "xAyB", where x is the number of bulls and y is the number of cows. Note that both secret and guess may contain duplicate digits.
  
@@ -236,8 +305,32 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                return "";
-            }
+               
+                int bulls_num = 0;
+                int cows_num = 0;
+                int[] secret_arr = new int[10];  //Array to store the counts of each number(cows) in secret_arr
+                int[] guess_arr = new int[10];   //Array to store the counts of each number(cows) in guess_arr
+                for (int i = 0; i < secret.Length; i++)  //Loop to compute bulls and store the counts of each number in both arrays
+                {
+                    int x = guess[i] - 48;
+                    int y = secret[i] - 48;
+                    if (x == y)  //If positions are same then we simply increase the bull count and do not add this to our cow arrays
+                    {
+                        bulls_num++;
+                    }
+                    else
+                    {  //If they are not bulls then we increment the positions of respective numbers in cow arrays
+                        secret_arr[y]++;
+                        guess_arr[x]++;
+                    }
+                }
+                for (int i = 0; i < 10; i++)
+                {
+                    cows_num = cows_num+Math.Min(secret_arr[i], guess_arr[i]); //To compute matching cows in both the strings , we take the minimum count of each number in both arrays
+                }
+                return bulls_num+"A"+cows_num+"B";
+
+    }
             catch (Exception)
             {
 
@@ -266,8 +359,45 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                
-                return new List<int>() {} ;
+                s = s.ToLower();
+                string str = string.Empty;
+                List<int> li = new List<int>();
+                int length = s.Length;
+                int m = -1;
+                int[] array = new int[26];
+                // array stores the last index of characters in  s
+                for (int i = 0; i < 26; i++)
+                {
+                    array[i] = -1;
+                }
+                for (int i = length - 1; i >= 0; --i)
+                // calculate last position of each character in the string.
+                {
+
+                    if (array[s[i] - 'a'] == -1) // Update the last index
+                    {
+                        array[s[i] - 'a'] = i;
+                    }
+                } // Iterate over the given string
+                for (int i = 0; i < length; ++i)
+                {
+                    
+                    int lp = array[s[i] - 'a'];// Get the last index of occurence of s[i]
+                    str += s[i];
+
+                   
+                    m = Math.Max(m, lp); //Check for max if the current character last position is larger than string maximum last position
+
+                    
+                    if (i == m)// partition ends if character's index = maximum value
+                    {
+                        li.Add(str.Length);//Apend length to list and repeating the previous process
+                        str = string.Empty;
+                        m = -1;// Updating the maximum to its initial value
+                       
+                    }
+                }
+                return li;
             }
             catch (Exception)
             {
@@ -281,55 +411,82 @@ namespace ISM6225_Assignment_2_Spring_2022
         You are given a string s of lowercase English letters and an array widths denoting how many pixels wide each lowercase English letter is. Specifically, widths[0] is the width of 'a', widths[1] is the width of 'b', and so on.
         You are trying to write s across several lines, where each line is no longer than 100 pixels. Starting at the beginning of s, write as many letters on the first line such that the total width does not exceed 100 pixels. Then, from where you stopped in s, continue writing as many letters as you can on the second line. Continue this process until you have written all of s.
         Return an array result of length 2 where:
-             •	result[0] is the total number of lines.
-             •	result[1] is the width of the last line in pixels.
+             • result[0] is the total number of lines.
+             • result[1] is the width of the last line in pixels.
  
         Example 1:
         Input: widths = [10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10], s = "abcdefghijklmnopqrstuvwxyz"
         Output: [3,60]
         Explanation: You can write s as follows:
-                     abcdefghij  	 // 100 pixels wide
-                     klmnopqrst  	 // 100 pixels wide
-                     uvwxyz      	 // 60 pixels wide
+                     abcdefghij   // 100 pixels wide
+                     klmnopqrst   // 100 pixels wide
+                     uvwxyz       // 60 pixels wide
                      There are a total of 3 lines, and the last line is 60 pixels wide.
 
 
 
          Example 2:
-         Input: widths = [4,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10], 
+         Input: widths = [4,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10],
          s = "bbbcccdddaaa"
          Output: [2,4]
          Explanation: You can write s as follows:
-                      bbbcccdddaa  	  // 98 pixels wide
-                      a           	 // 4 pixels wide
+                      bbbcccdddaa    // 98 pixels wide
+                      a           // 4 pixels wide
                       There are a total of 2 lines, and the last line is 4 pixels wide.
 
          */
 
-        public static List<int> NumberOfLines(int[] widths,string s)
+        public static List<int> NumberOfLines(int[] widths, string s)
         {
             try
             {
                 //write your code here.
+                int c = 0; //temporary variable
+                int lines = 0;
+                List<int> ls = new List<int>(); //output list
+                foreach (char ch in s)
+                {
 
-                return new List<int>() { };
+                    if (c + widths[Convert.ToInt32(ch) - 97] >= 100) 
+                    {
+                        lines++; //incrementing count of lines
+                        if (c + widths[Convert.ToInt32(ch) - 97] > 100)
+                        {
+                            c = widths[Convert.ToInt32(ch) - 97];  
+                        }
+                        else
+                        {
+                            c = 0;
+                        }
+                    }
+                    else
+                    {
+                        c = c + widths[Convert.ToInt32(ch) - 97];
+                    }
+                }
+                if (c < 100 && c > 0)
+                {
+                    lines++;
+                }
+                ls.Add(lines);
+                ls.Add(c);
+                return ls;
             }
             catch (Exception)
             {
                 throw;
             }
-
         }
 
 
         /*
-        
+       
         Question 7:
 
         Given a string bulls_string containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
         An input string is valid if:
-            1.	Open brackets must be closed by the same type of brackets.
-            2.	Open brackets must be closed in the correct order.
+            1. Open brackets must be closed by the same type of brackets.
+            2. Open brackets must be closed in the correct order.
  
         Example 1:
         Input: bulls_string = "()"
@@ -349,9 +506,22 @@ namespace ISM6225_Assignment_2_Spring_2022
         {
             try
             {
-                //write your code here.
 
-                return false;
+                //write your code here.
+                Dictionary<char, char> dict = new Dictionary<char, char>();
+                dict.Add('(', ')');
+                dict.Add('{', '}');
+                dict.Add('[', ']');
+                bool flag = true;
+                int length = bulls_string10.Length;
+                for (int i = 0; i < length- 1; i += 2)
+                {
+                    if (bulls_string10[i + 1] != dict[bulls_string10[i]])
+                    {
+                        flag = false;
+                    }
+                }
+                return flag;
             }
             catch (Exception)
             {
@@ -366,14 +536,14 @@ namespace ISM6225_Assignment_2_Spring_2022
         /*
          Question 8
         International Morse Code defines a standard encoding where each letter is mapped to a series of dots and dashes, as follows:
-        •	'a' maps to ".-",
-        •	'b' maps to "-...",
-        •	'c' maps to "-.-.", and so on.
+        • 'a' maps to ".-",
+        • 'b' maps to "-...",
+        • 'c' maps to "-.-.", and so on.
 
         For convenience, the full table for the 26 letters of the English alphabet is given below:
         [".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
         Given an array of strings words where each word can be written as a concatenation of the Morse code of each letter.
-            •	For example, "cab" can be written as "-.-..--...", which is the concatenation of "-.-.", ".-", and "-...". We will call such a concatenation the transformation of a word.
+            • For example, "cab" can be written as "-.-..--...", which is the concatenation of "-.-.", ".-", and "-...". We will call such a concatenation the transformation of a word.
         Return the number of different transformations among all words we have.
  
         Example 1:
@@ -393,21 +563,39 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-
-                return 0;
+                string[] morsecodes = { ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--", "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--.." };
+                string temp = "";
+                Dictionary<string, int> d = new Dictionary<string, int>(); //Dictionary to store morsecodes and their counts
+                foreach (string s in words)
+                {
+                    foreach (char ch in s)
+                    {
+                        temp = temp + morsecodes[Convert.ToInt32(ch) - 'a'];
+                    }
+                    if (d.ContainsKey(temp))
+                    {
+                        d[temp] = d[temp] + 1;
+                    }
+                    else
+                    {
+                        d.Add(temp, 1);
+                    }
+                    temp=string.Empty;
+                }
+                
+                return d.Count;
             }
             catch (Exception)
             {
                 throw;
             }
-
         }
 
-      
+
 
 
         /*
-        
+       
         Question 9:
         You are given an n x n integer matrix grid where each value grid[i][j] represents the elevation at that point (i, j).
         The rain starts to fall. At time t, the depth of the water everywhere is t. You can swim from a square to another 4-directionally adjacent square if and only if the elevation of both squares individually are at most t. You can swim infinite distances in zero time. Of course, you must stay within the boundaries of the grid during your swim.
@@ -441,15 +629,15 @@ namespace ISM6225_Assignment_2_Spring_2022
         Given two strings word1 and word2, return the minimum number of operations required to convert word1 to word2.
         You have the following three operations permitted on a word:
 
-        •	Insert a character
-        •	Delete a character
-        •	Replace a character
+        • Insert a character
+        • Delete a character
+        • Replace a character
          Note: Try to come up with a solution that has polynomial runtime, then try to optimize it to quadratic runtime.
 
         Example 1:
         Input: word1 = "horse", word2 = "ros"
         Output: 3
-        Explanation: 
+        Explanation:
         horse -> rorse (replace 'h' with 'r')
         rorse -> rose (remove 'r')
         rose -> ros (remove 'e')
@@ -461,8 +649,39 @@ namespace ISM6225_Assignment_2_Spring_2022
             try
             {
                 //write your code here.
-                return 0;
+                int a = word1.Length;
+                int b = word2.Length;
 
+                //Matrix to store the results
+                int[,] m = new int[a + 1, b + 1];
+                for (int x = 0; x <= a; x++) //populate matrix in bottom-top order.
+                {
+                    for (int y = 0; y <= b; y++)
+                    {
+                        if (x == 0)
+                        {
+                         //  first string is empty,then Number of operations to copy second string to first string = j
+                            m[x, y] = y; 
+                        }
+                        else if (y == 0)
+                        {
+                         // If second string is empty,then Number of operations to copy first string to second string = j
+                            m[x, y] = x;
+                        }
+                       else if (word1[x - 1] == word2[y - 1])
+                        { //last characters are same.so, repeat the process for remaining string
+
+                            m[x, y] = m[x - 1, y - 1];
+                        }
+                       else
+                        { //last characters are different,select minimum cost operation among Insert,Remove and Replace operations.
+                            m[x, y] = 1 + Math.Min(m[x, y - 1], //Insert
+                                Math.Min(m[x - 1, y],  //Remove
+                                m[x - 1, y - 1])); //Replace
+                        }
+                    }
+                }
+                return m[a, b];
             }
             catch (Exception)
             {
@@ -472,3 +691,4 @@ namespace ISM6225_Assignment_2_Spring_2022
         }
     }
 }
+
