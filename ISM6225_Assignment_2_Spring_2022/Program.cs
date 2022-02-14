@@ -574,6 +574,8 @@ namespace ISM6225_Assignment_2_Spring_2022
                     }
                     if (d.ContainsKey(temp))
                     {
+
+
                         d[temp] = d[temp] + 1;
                     }
                     else
